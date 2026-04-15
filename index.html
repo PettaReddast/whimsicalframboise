@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>my journal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Caveat:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --fog:#f0f2f5;--mist:#e8ecf0;--veil:#dde3ea;--seam:#c8d0da;
+  --slate:#8a9aaa;--ink:#1e2430;--dim:#5a6878;--ghost:#aab8c4;
+  --blush:#c4788a;--blush2:#e8bcc6;--blush3:#f5e8ec;
+  --lavender:#8878aa;--lavender2:#c8bedd;--lavender3:#f0edf8;
+  --celadon:#5a8878;--celadon2:#a8c8be;--celadon3:#e8f2ee;
+  --stone:#7888a0;--stone2:#b8c8d8;--stone3:#edf0f5;
+  --work-c:#5a6898;--work-bg:#eaedf8;--work-b:#8898c8;
+  --phd-c:#c4788a;--phd-bg:#f5e8ec;--phd-b:#c4788a;
+  --ra-c:#5a8878;--ra-bg:#e8f2ee;--ra-b:#5a8878;
+  --life-c:#7888a0;--life-bg:#edf0f5;--life-b:#7888a0;
+  --creative-c:#8878aa;--creative-bg:#f0edf8;--creative-b:#8878aa;
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--fog);color:var(--ink);font-size:14px}
+
+/* LOGIN */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--fog)}
+.login-box{background:var(--mist);border:1px solid var(--seam);border-radius:16px;padding:48px 40px;width:360px;text-align:center}
+.login-star{font-size:32px;color:var(--blush);margin-bottom:16px;opacity:.6;font-family:'Cormorant Garamond',serif}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;color:var(--blush);font-weight:300;margin-bottom:6px}
+.login-sub{font-size:11px;color:var(--slate);letter-spacing:.3px;margin-bottom:32px}
+.login-input{width:100%;padding:11px 16px;border:1px solid var(--veil);border-radius:24px;background:rgba(255,255,255,.6);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;outline:none;text-align:center;letter-spacing:2px;transition:border-color .2s}
+.login-input:focus{border-color:var(--blush2)}
+.login-btn{margin-top:14px;width:100%;padding:11px;border-radius:24px;border:none;background:var(--blush);color:#fff;font-family:'Caveat',cursive;font-size:16px;cursor:pointer;letter-spacing:.5px;transition:background .15s}
+.login-btn:hover{background:#b06878}
+.login-err{margin-top:10px;font-size:11px;color:var(--blush);font-style:italic;font-family:'Cormorant Garamond',serif;min-height:16px}
+.login-hint{margin-top:20px;font-size:10px;color:var(--ghost);font-family:'Cormorant Garamond',serif;font-style:italic}
+
+/* APP */
+#app{display:none;height:100vh;overflow:hidden}
+.shell{display:flex;height:100vh}
+.sb{width:200px;background:#1a1e28;flex-shrink:0;display:flex;flex-direction:column;height:100vh}
+.sb-top{padding:22px 18px 16px;border-bottom:1px solid #262c38}
+.jname{background:none;border:none;outline:none;font-family:'Caveat',cursive;font-size:19px;color:#c8d4e0;width:100%;caret-color:var(--blush2);letter-spacing:.3px}
+.jname::placeholder{color:#2e3848;font-style:italic}
+.jsub{font-size:10px;color:#2e3848;margin-top:3px;letter-spacing:.5px}
+.sb-sec{padding:12px 18px 3px;font-size:9px;color:#3a4458;letter-spacing:1.5px;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:9px;padding:7px 18px;cursor:pointer;font-family:'Caveat',cursive;font-size:15px;color:#5a6e88;border-left:2px solid transparent;transition:all .15s}
+.sb-item:hover{color:#c8d4e0;background:rgba(255,255,255,.03)}
+.sb-item.on{color:#e8ecf4;border-left-color:var(--blush);background:rgba(196,120,138,.07)}
+.sb-item svg{width:13px;height:13px;flex-shrink:0;opacity:.7}
+.sb-foot{margin-top:auto;padding:16px 18px;border-top:1px solid #262c38;display:flex;flex-direction:column;gap:8px}
+.sb-foot p{font-size:10px;color:#2e3848;font-family:'Cormorant Garamond',serif;font-style:italic;line-height:1.6}
+.lock-btn{background:none;border:1px solid #2e3848;border-radius:20px;padding:5px 12px;color:#3a4458;font-family:'DM Sans',sans-serif;font-size:10px;cursor:pointer;transition:all .15s;text-align:center}
+.lock-btn:hover{border-color:#5a6e88;color:#8a9aaa}
+.main{flex:1;display:flex;flex-direction:column;background:var(--fog);min-width:0;height:100vh;overflow:hidden}
+.topbar{padding:13px 24px;background:var(--mist);border-bottom:1px solid var(--seam);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.tb-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--blush);font-weight:300;letter-spacing:.5px}
+.tb-date{font-size:11px;color:var(--slate);letter-spacing:.3px}
+.tbtn{padding:6px 14px;border-radius:20px;border:1px solid var(--seam);background:transparent;color:var(--dim);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;transition:all .15s}
+.tbtn:hover{border-color:var(--blush);color:var(--blush)}
+.tbtn.pri{background:var(--blush);color:#fff;border-color:var(--blush)}
+.tbtn.pri:hover{background:#b06878}
+.content{padding:20px 24px;flex:1;overflow-y:auto}
+.page{display:none}
+.page.on{display:block}
+
+/* DATE RAIL */
+.rail{display:flex;gap:5px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px}
+.dp{flex-shrink:0;padding:8px 9px;border-radius:8px;border:1px solid var(--veil);cursor:pointer;text-align:center;min-width:48px;background:var(--mist);transition:all .15s;position:relative;padding-bottom:14px}
+.dp:hover{border-color:var(--ghost)}
+.dp.tod{border-color:var(--blush2);background:var(--blush3)}
+.dp.sel{background:var(--blush);border-color:var(--blush)}
+.dp.sel .dd,.dp.sel .dw{color:#fff}
+.dp-dots{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);display:flex;gap:2px}
+.dp-dot{width:4px;height:4px;border-radius:50%}
+.dw{font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:var(--ghost);font-family:'DM Sans',sans-serif}
+.dd{font-family:'Caveat',cursive;font-size:18px;color:var(--ink);line-height:1.1;margin-bottom:2px}
+
+/* LAYOUT */
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:14px}
+.card{background:var(--mist);border:1px solid var(--veil);border-radius:10px;padding:16px}
+.stat{background:var(--mist);border:1px solid var(--veil);border-radius:10px;padding:14px;border-top:2px solid}
+.s-blush{border-top-color:var(--blush)}
+.s-lav{border-top-color:var(--lavender)}
+.s-cel{border-top-color:var(--celadon)}
+.slabel{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--ghost);margin-bottom:7px;font-weight:500}
+.snum{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--ink);line-height:1;font-weight:300}
+.ssub{font-size:11px;color:var(--slate);margin-top:3px;font-style:italic;font-family:'Cormorant Garamond',serif}
+.ptitle{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--ghost);margin-bottom:12px;font-weight:500}
+
+/* PILLS — updated categories */
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-family:'DM Sans',sans-serif}
+.p-work{background:var(--work-bg);color:var(--work-c)}
+.p-phd{background:var(--phd-bg);color:var(--phd-c)}
+.p-RA{background:var(--ra-bg);color:var(--ra-c)}
+.p-life{background:var(--life-bg);color:var(--life-c)}
+.p-creativity{background:var(--creative-bg);color:var(--creative-c)}
+
+/* EVENTS */
+.ev-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--veil);align-items:flex-start}
+.ev-row:last-child{border:none;padding-bottom:0}
+.ev-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.ev-ti{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--ink);line-height:1.3}
+.ev-me{font-size:10px;color:var(--slate);margin-top:2px}
+
+/* TASKS */
+.task-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--veil)}
+.task-row:last-child{border:none}
+.chk{width:15px;height:15px;border-radius:50%;flex-shrink:0;margin-top:2px;cursor:pointer;border:1.5px solid var(--seam);transition:all .15s;display:flex;align-items:center;justify-content:center;background:transparent}
+.chk:hover{border-color:var(--blush)}
+.chk.dn{background:var(--celadon);border-color:var(--celadon)}
+.chk.dn::after{content:'';display:block;width:5px;height:3px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translateY(-1px)}
+.tk{font-family:'Cormorant Garamond',serif;font-size:13px;flex:1;line-height:1.5;color:var(--ink)}
+.tk.dn{text-decoration:line-through;color:var(--ghost)}
+.lb-badge{display:inline-flex;padding:1px 7px;background:rgba(136,120,170,.12);color:var(--lavender);border:1px solid var(--lavender2);border-radius:10px;font-size:9px;font-family:'DM Sans',sans-serif;letter-spacing:.3px}
+.del{background:none;border:none;cursor:pointer;color:var(--veil);font-size:14px;padding:1px 5px;border-radius:50%;transition:all .15s}
+.del:hover{background:var(--blush3);color:var(--blush)}
+.sep-txt{font-size:9px;color:var(--ghost);text-transform:uppercase;letter-spacing:.8px;font-family:'DM Sans',sans-serif;margin:8px 0 4px}
+.add-row{display:flex;gap:7px;margin-bottom:13px}
+.add-row input,.add-row select{padding:7px 12px;border:1px solid var(--veil);border-radius:20px;background:var(--mist);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;outline:none;transition:border-color .15s}
+.add-row input:focus,.add-row select:focus{border-color:var(--lavender2)}
+.add-row input{flex:1}
+.filter-strip{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap}
+.fs{padding:3px 12px;border-radius:20px;border:1px solid var(--veil);background:transparent;color:var(--slate);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;transition:all .15s}
+.fs:hover{border-color:var(--ghost)}
+.fs.on{background:var(--blush);color:#fff;border-color:var(--blush)}
+
+/* SCHEDULE */
+.tb-row{display:flex;align-items:stretch;border-top:1px solid var(--veil);min-height:42px}
+.tb-t{font-size:10px;color:var(--ghost);width:42px;flex-shrink:0;text-align:right;padding:11px 8px 0 0;font-family:'DM Sans',sans-serif}
+.tb-inner{flex:1;padding:5px 0 5px 12px}
+.tb-block{border-radius:6px;padding:6px 11px;font-family:'Cormorant Garamond',serif;border-left:2px solid}
+.tb-block strong{display:block;font-size:12px;font-weight:500}
+.tb-block span{font-size:10px;opacity:.7;font-style:italic;font-family:'DM Sans',sans-serif}
+.bl-work{background:var(--work-bg);color:var(--work-c);border-color:var(--work-b)}
+.bl-phd{background:var(--phd-bg);color:var(--phd-c);border-color:var(--phd-b)}
+.bl-RA{background:var(--ra-bg);color:var(--ra-c);border-color:var(--ra-b)}
+.bl-life{background:var(--life-bg);color:var(--life-c);border-color:var(--life-b)}
+.bl-creativity{background:var(--creative-bg);color:var(--creative-c);border-color:var(--creative-b)}
+.bl-personal{background:var(--stone3);color:var(--stone);border-color:var(--stone2)}
+.sched-add{display:flex;gap:7px;margin-top:14px;flex-wrap:wrap}
+.sched-add input,.sched-add select{padding:7px 12px;border:1px solid var(--veil);border-radius:20px;background:var(--mist);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;outline:none}
+.sched-add input{flex:1;min-width:100px}
+.sched-add input[type=time]{min-width:90px;font-style:normal}
+
+/* ── RICH TEXT EDITOR ── */
+.editor-toolbar{display:flex;gap:2px;padding:8px 10px;background:rgba(255,255,255,.5);border:1px solid var(--veil);border-bottom:none;border-radius:8px 8px 0 0;flex-wrap:wrap;align-items:center}
+.et-btn{width:28px;height:28px;border:1px solid transparent;border-radius:5px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--dim);font-family:'DM Sans',sans-serif;font-weight:500;transition:all .12s;flex-shrink:0}
+.et-btn:hover{background:var(--veil);border-color:var(--seam);color:var(--ink)}
+.et-btn.active{background:var(--blush3);border-color:var(--blush2);color:var(--blush)}
+.et-sep{width:1px;height:20px;background:var(--veil);margin:0 4px;flex-shrink:0}
+.et-color-wrap{position:relative;display:inline-flex;align-items:center}
+.et-color{width:28px;height:28px;border:1px solid transparent;border-radius:5px;cursor:pointer;padding:0;background:transparent;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.et-color:hover{background:var(--veil);border-color:var(--seam)}
+.et-color-swatch{width:16px;height:16px;border-radius:3px;pointer-events:none}
+.rich-editor{min-height:180px;padding:14px;border:1px solid var(--veil);border-radius:0 0 8px 8px;background:rgba(255,255,255,.5);outline:none;font-family:'Cormorant Garamond',serif;font-size:14px;line-height:1.9;color:var(--ink);transition:border-color .15s}
+.rich-editor:focus{border-color:var(--lavender2);background:rgba(255,255,255,.7)}
+.rich-editor ul,.rich-editor ol{margin-left:20px}
+.rich-editor ul li{list-style:disc}
+.rich-editor ol li{list-style:decimal}
+.rich-editor li{margin:2px 0}
+.rich-editor mark{border-radius:3px;padding:0 2px}
+.rich-editor s{color:var(--ghost)}
+.rich-editor h3{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--blush);margin:8px 0 4px}
+.rich-editor blockquote{border-left:3px solid var(--lavender2);padding-left:12px;color:var(--dim);font-style:italic;margin:6px 0}
+
+/* JOURNAL ENTRIES */
+.je{background:var(--mist);border:1px solid var(--veil);border-left:3px solid var(--lavender2);border-radius:0 10px 10px 0;padding:18px;margin-bottom:12px;position:relative}
+.je-d{font-size:10px;color:var(--slate);letter-spacing:.3px;font-family:'DM Sans',sans-serif}
+.je-mood{display:inline-block;font-size:10px;padding:1px 8px;background:var(--lavender3);color:var(--lavender);border:1px solid var(--lavender2);border-radius:10px;margin-left:7px;font-family:'DM Sans',sans-serif}
+.je-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--blush);margin:5px 0 9px;font-weight:400}
+.je-body{font-family:'Cormorant Garamond',serif;font-size:13px;line-height:1.9;color:var(--dim)}
+.je-body ul{margin-left:20px}.je-body ul li{list-style:disc}
+.je-body ol{margin-left:20px}.je-body ol li{list-style:decimal}
+.je-body mark{border-radius:3px;padding:0 2px}
+.je-body s{color:var(--ghost)}
+.je-body h3{font-size:15px;font-style:italic;color:var(--blush);margin:6px 0 3px}
+.je-body blockquote{border-left:3px solid var(--lavender2);padding-left:12px;color:var(--dim);font-style:italic;margin:4px 0}
+.je-dec{position:absolute;top:14px;right:16px;font-size:14px;opacity:.15;color:var(--lavender);font-family:'Cormorant Garamond',serif}
+.je-new{background:var(--mist);border:1px solid var(--veil);border-radius:10px;padding:16px;margin-bottom:16px}
+.je-new input,.je-new select{width:100%;padding:8px 12px;border:1px solid var(--veil);border-radius:20px;background:rgba(255,255,255,.5);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;outline:none;margin-bottom:8px;transition:border-color .15s}
+.je-new input:focus{border-color:var(--lavender2)}
+
+/* GOALS */
+.goal-card{background:var(--mist);border:1px solid var(--veil);border-radius:10px;padding:15px;margin-bottom:11px}
+.gc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.gc-title{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:var(--dim)}
+.gc-pct{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--blush);font-weight:300;line-height:1}
+.hab{display:flex;gap:4px;margin-top:7px}
+.hab-d{width:28px;height:28px;border-radius:6px;border:1px solid var(--veil);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--ghost);cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.3px;font-family:'DM Sans',sans-serif}
+.hab-d:hover{border-color:var(--blush2)}
+.hab-d.dn{background:var(--blush);border-color:var(--blush);color:#fff}
+.pbar{height:3px;background:var(--veil);border-radius:2px;margin-top:10px;overflow:hidden}
+.pbf{height:100%;border-radius:2px;transition:width .3s;background:var(--blush)}
+.goal-form{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.goal-form input,.goal-form select{padding:6px 12px;border:1px solid var(--veil);border-radius:20px;background:var(--mist);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;outline:none}
+.goal-form input{flex:1;min-width:140px}
+
+/* CULTURAL SHELF */
+.cs-top{background:#1a1e28;padding:12px 18px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap;gap:8px}
+.cs-title{font-family:'Caveat',cursive;font-size:17px;color:#c8d4e0}
+.cs-loc{font-size:10px;color:#3a4458;font-style:italic}
+.zip-row{display:flex;gap:6px;align-items:center}
+.zip-row input{padding:5px 10px;border:1px solid #3a4458;border-radius:20px;background:#262c38;color:#c8d4e0;font-family:'Caveat',cursive;font-size:14px;width:100px;outline:none;letter-spacing:.5px}
+.zip-row input:focus{border-color:var(--blush)}
+.zip-row input::placeholder{color:#3a4458;font-style:italic;font-size:12px}
+.zip-btn{padding:5px 12px;border-radius:20px;border:1px solid var(--blush);background:transparent;color:var(--blush);font-family:'Caveat',cursive;font-size:13px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.zip-btn:hover{background:rgba(196,120,138,.15)}
+.cf-strip{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.cf{padding:3px 12px;border-radius:20px;border:1px solid var(--veil);background:transparent;color:var(--slate);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;transition:all .15s}
+.cf:hover{border-color:var(--ghost)}
+.cf.on{color:#fff}
+.cf[data-c="all"].on{background:#3a4050}
+.cf[data-c="film"].on{background:var(--stone)}
+.cf[data-c="music"].on{background:var(--celadon)}
+.cf[data-c="art"].on{background:var(--lavender)}
+.cf[data-c="market"].on{background:var(--blush)}
+.cf[data-c="festival"].on{background:#6888a8}
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:9px;margin-bottom:4px}
+.ev-card{background:var(--mist);border:1px solid var(--veil);border-radius:8px;padding:13px;border-top:2px solid;position:relative}
+.ev-card[data-c="film"]{border-top-color:var(--stone)}
+.ev-card[data-c="music"]{border-top-color:var(--celadon)}
+.ev-card[data-c="art"]{border-top-color:var(--lavender)}
+.ev-card[data-c="market"]{border-top-color:var(--blush)}
+.ev-card[data-c="festival"]{border-top-color:#6888a8}
+.eb-row{margin-bottom:7px;display:flex;gap:3px;flex-wrap:wrap;padding-right:28px}
+.eb{display:inline-block;padding:1px 7px;border-radius:10px;font-size:9px;font-family:'DM Sans',sans-serif}
+.eb-film{background:var(--stone3);color:var(--stone)}
+.eb-music{background:var(--celadon3);color:var(--celadon)}
+.eb-art{background:var(--lavender3);color:var(--lavender)}
+.eb-market{background:var(--blush3);color:var(--blush)}
+.eb-festival{background:#eaf0f8;color:#6888a8}
+.eb-tag{background:rgba(136,120,170,.1);color:var(--lavender)}
+.eb-hot{background:var(--blush3);color:var(--blush)}
+.ev-title{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:var(--ink);margin-bottom:3px;line-height:1.4}
+.ev-venue{font-size:10px;color:var(--slate);font-family:'DM Sans',sans-serif;margin-bottom:4px}
+.ev-desc{font-size:11px;color:var(--dim);font-family:'Cormorant Garamond',serif;line-height:1.6}
+.ev-date{font-family:'Caveat',cursive;font-size:13px;color:var(--slate);border-top:1px solid var(--veil);padding-top:7px;margin-top:7px;display:flex;justify-content:space-between;align-items:center}
+.cal-btn{background:none;border:1px solid var(--veil);border-radius:10px;padding:2px 8px;font-size:10px;color:var(--slate);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap}
+.cal-btn:hover{border-color:var(--blush);color:var(--blush);background:var(--blush3)}
+.cal-btn.saved{background:var(--celadon3);border-color:var(--celadon2);color:var(--celadon)}
+.sec-div{display:flex;align-items:center;gap:8px;margin:16px 0 10px}
+.sdl{flex:1;height:1px;background:var(--veil)}
+.sdt{font-family:'Caveat',cursive;font-size:12px;color:var(--ghost);white-space:nowrap;letter-spacing:.5px}
+.cs-footer{font-size:10px;color:var(--seam);text-align:center;padding:12px 0 2px;font-style:italic;font-family:'Cormorant Garamond',serif}
+.cs-loading{text-align:center;padding:40px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--slate)}
+.cs-dots{display:flex;gap:6px;justify-content:center;margin-top:14px}
+.cs-dot{width:6px;height:6px;border-radius:50%;background:var(--blush);animation:pulse 1.2s ease-in-out infinite}
+.cs-dot:nth-child(2){animation-delay:.2s}
+.cs-dot:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.empty-state{text-align:center;padding:40px 0;color:var(--ghost);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:14px}
+.motto-wrap{margin-bottom:16px}
+.motto-input{width:100%;background:transparent;border:none;border-bottom:1px dashed var(--lavender2);outline:none;font-family:'Caveat',cursive;font-size:16px;color:var(--lavender);padding:4px 0 6px;transition:border-color .2s}
+.motto-input:focus{border-bottom-color:var(--lavender)}
+.motto-input::placeholder{color:var(--lavender2);font-style:italic}
+.opp-card{background:var(--mist);border:1px solid var(--veil);border-radius:10px;padding:15px;margin-bottom:11px;border-left:4px solid}
+.opp-card.scholarship{border-left-color:var(--blush)}
+.opp-card.conference{border-left-color:var(--celadon)}
+.opp-type-badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:10px;font-family:'DM Sans',sans-serif;font-weight:500;margin-bottom:7px}
+.opp-type-badge.scholarship{background:var(--blush3);color:var(--blush)}
+.opp-type-badge.conference{background:var(--celadon3);color:var(--celadon)}
+.opp-status-pill{display:inline-block;padding:2px 9px;border-radius:10px;font-size:10px;font-family:'DM Sans',sans-serif;margin-left:5px}
+.opp-urgent{font-size:10px;color:var(--blush);margin-left:6px;font-family:'DM Sans',sans-serif}
+.opp-notes{font-size:11px;color:var(--dim);font-family:'Cormorant Garamond',serif;font-style:italic;margin-top:6px}
+.s-researching{background:#f0edf8;color:var(--lavender)}
+.s-drafting{background:#faeeda;color:#b8892a}
+.s-applied{background:#eaedf8;color:var(--job-c)}
+.s-accepted{background:var(--celadon3);color:var(--celadon)}
+.s-rejected{background:var(--blush3);color:var(--blush)}
+.s-registered{background:var(--celadon3);color:var(--celadon)}
+.opp-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--ink);margin-bottom:4px}
+.opp-meta{font-size:11px;color:var(--slate);font-family:'DM Sans',sans-serif;margin-bottom:5px}
+.opp-deadline{font-family:'Caveat',cursive;font-size:14px;color:var(--ink);margin-bottom:5px}
+.opp-deadline.urgent{color:var(--blush)}
+.opp-reqs{font-size:12px;color:var(--dim);font-family:'Cormorant Garamond',serif;line-height:1.7;margin:8px 0;padding:8px 10px;background:rgba(255,255,255,.4);border-radius:6px;border-left:2px solid var(--lavender2)}
+.opp-actions{display:flex;gap:6px;margin-top:10px;padding-top:8px;border-top:1px dashed var(--veil);flex-wrap:wrap;align-items:center}
+.opp-act-btn{padding:3px 10px;border-radius:20px;border:1px solid var(--veil);background:transparent;color:var(--slate);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.opp-act-btn:hover{border-color:var(--ghost);color:var(--ink)}
+.opp-del{color:var(--blush);border-color:var(--blush2)}
+.opp-sel{padding:3px 8px;border-radius:20px;border:1px solid var(--veil);background:var(--mist);color:var(--ink);font-size:11px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer}
+.kanban{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.kol{background:var(--mist);border:1px solid var(--veil);border-radius:8px;padding:11px}
+.kol-title{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--ghost);margin-bottom:8px;font-weight:500}
+.kcard{background:#fff;border:1px solid var(--veil);border-radius:6px;padding:9px;margin-bottom:6px;cursor:pointer;transition:border-color .15s}
+.kcard:hover{border-color:var(--ghost)}
+.kcard-name{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--ink);line-height:1.3}
+.kcard-date{font-size:10px;color:var(--slate);margin-top:3px;font-family:'DM Sans',sans-serif}
+.deadline-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed var(--veil);align-items:center}
+.deadline-row:last-child{border:none}
+.dl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dl-name{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--ink)}
+.dl-sub{font-size:10px;color:var(--slate);font-family:'DM Sans',sans-serif;margin-top:1px}
+.dl-days{font-family:'Caveat',cursive;font-size:14px;color:var(--slate)}
+.dl-days.urgent{color:var(--blush)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1e28;color:#e8ecf0;padding:10px 18px;border-radius:20px;font-size:12px;font-family:'DM Sans',sans-serif;opacity:0;transition:opacity .3s;pointer-events:none;z-index:1000}
+.toast.show{opacity:1}
+
+/* NOTE */
+.note-ta{background:rgba(255,255,255,.5);border:1px solid var(--veil);border-radius:8px;padding:13px;font-family:'Caveat',cursive;font-size:15px;color:var(--ink);line-height:1.9;background-image:repeating-linear-gradient(transparent,transparent 28px,rgba(136,120,170,.1) 28px,rgba(136,120,170,.1) 29px);background-position:0 6px;resize:none;width:100%;outline:none}
+.note-ta:focus{border-color:var(--lavender2)}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-star">✦</div>
+    <div class="login-title">welcome back</div>
+    <div class="login-sub">your little world is waiting</div>
+    <input class="login-input" type="password" id="pw-input" placeholder="enter your password" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="login-btn" onclick="tryLogin()">open journal</button>
+    <div class="login-err" id="pw-err"></div>
+    <div class="login-hint">first visit? whatever you type becomes your password</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+<div class="shell">
+<div class="sb">
+  <div class="sb-top">
+    <input class="jname" id="jname" placeholder="name your journal…" maxlength="26" oninput="saveJName()">
+    <div class="jsub" id="sb-zip-display">chicago · 60605</div>
+  </div>
+  <div class="sb-sec">navigate</div>
+  <div class="sb-item on" id="n-dash" onclick="go('dash')"><svg viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>today</div>
+  <div class="sb-item" id="n-sched" onclick="go('sched')"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="2.5" width="12" height="10" rx="1.5"/><path d="M4 1v3M10 1v3M1 6h12"/></svg>schedule</div>
+  <div class="sb-item" id="n-tasks" onclick="go('tasks')"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M2 3.5h10M2 7h7M2 10.5h5"/></svg>tasks</div>
+  <div class="sb-sec">reflect</div>
+  <div class="sb-item" id="n-journal" onclick="go('journal')"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="1" width="10" height="12" rx="1.5"/><path d="M4.5 5h5M4.5 8h3.5" stroke-linecap="round"/></svg>journal</div>
+  <div class="sb-item" id="n-goals" onclick="go('goals')"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><circle cx="7" cy="7" r="2.5"/><circle cx="7" cy="7" r=".8" fill="currentColor"/></svg>goals</div>
+  <div class="sb-item" id="n-opps" onclick="go('opps')"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="12" height="12" rx="2"/><path d="M4 5h6M4 7.5h4M4 10h5" stroke-linecap="round"/></svg>opportunities</div>
+  <div class="sb-sec">discover</div>
+  <div class="sb-item" id="n-culture" onclick="go('culture')"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7 1.5l1.4 2.9 3.1.45-2.25 2.2.53 3.1L7 8.6l-2.78 1.55.53-3.1L2.5 4.85l3.1-.45z"/></svg>cultural shelf</div>
+  <div class="sb-foot">
+    <p>"not all those who wander are lost"</p>
+    <button class="lock-btn" onclick="lockApp()">lock journal</button>
+  </div>
+</div>
+
+<div class="main">
+<div class="topbar">
+  <div><div class="tb-title" id="pg-title">today</div><div class="tb-date" id="pg-date"></div></div>
+  <div style="display:flex;gap:7px">
+    <button class="tbtn" id="tb2" style="display:none" onclick="openJournalForm()">+ entry</button>
+    <button class="tbtn pri" id="tb1" onclick="tb1Act()">+ add event</button>
+  </div>
+</div>
+<div class="content">
+
+<!-- DASHBOARD -->
+<div class="page on" id="pg-dash">
+  <div class="rail" id="dash-rail"></div>
+  <div class="three">
+    <div class="stat s-blush"><div class="slabel">events today</div><div class="snum" id="d-ev">0</div><div class="ssub">scheduled</div></div>
+    <div class="stat s-lav"><div class="slabel">open tasks</div><div class="snum" id="d-tk">0</div><div class="ssub">to do</div></div>
+    <div class="stat s-cel"><div class="slabel">left behind</div><div class="snum" id="d-lb">0</div><div class="ssub">rolled over</div></div>
+  </div>
+  <div class="two">
+    <div class="card"><div class="ptitle">today's rhythm</div><div id="dash-events"></div></div>
+    <div class="card"><div class="ptitle">tasks</div><div id="dash-tasks"></div></div>
+  </div>
+  <div class="motto-wrap">
+    <input class="motto-input" id="motto-input" placeholder="today's motto or encouragement…" maxlength="140" oninput="saveMotto()" autocomplete="off">
+  </div>
+  <div class="card"><div class="ptitle">upcoming deadlines</div><div id="dash-opps"></div></div>
+</div>
+
+<!-- SCHEDULE -->
+<div class="page" id="pg-sched">
+  <div class="rail" id="sched-rail"></div>
+  <div class="card">
+    <div class="ptitle" id="sched-label">schedule</div>
+    <div id="sched-blocks"></div>
+    <div style="border-top:1px solid var(--veil);margin-top:12px;padding-top:12px">
+      <div class="ptitle">add time block</div>
+      <div class="sched-add">
+        <input type="text" id="ev-title" placeholder="event name…">
+        <input type="time" id="ev-start" value="09:00">
+        <input type="time" id="ev-end" value="10:00">
+        <select id="ev-cat" style="font-style:normal;font-family:'DM Sans',sans-serif;font-size:12px">
+          <option value="work">Work</option>
+          <option value="phd">PhD</option>
+          <option value="RA">RA</option>
+          <option value="creativity">Creativity</option>
+          <option value="personal">Personal</option>
+          <option value="life">Life</option>
+        </select>
+        <button class="tbtn pri" onclick="addEvent()" style="white-space:nowrap">add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TASKS -->
+<div class="page" id="pg-tasks">
+  <div class="add-row">
+    <input id="new-task" placeholder="add a task, press enter…" onkeydown="if(event.key==='Enter')addTask()">
+    <select id="task-cat" style="font-style:normal;font-family:'DM Sans',sans-serif;font-size:12px">
+      <option value="work">Work</option>
+      <option value="phd">PhD</option>
+      <option value="RA">RA</option>
+      <option value="life">Life</option>
+      <option value="creativity">Creativity</option>
+    </select>
+    <button class="tbtn pri" onclick="addTask()">add</button>
+  </div>
+  <div class="filter-strip">
+    <span class="fs on" id="tf-all" onclick="filterT('all')">all</span>
+    <span class="fs" id="tf-work" onclick="filterT('work')">work</span>
+    <span class="fs" id="tf-phd" onclick="filterT('phd')">phd</span>
+    <span class="fs" id="tf-RA" onclick="filterT('RA')">RA</span>
+    <span class="fs" id="tf-life" onclick="filterT('life')">life</span>
+    <span class="fs" id="tf-creativity" onclick="filterT('creativity')">creativity</span>
+  </div>
+  <div class="card" id="task-list"></div>
+</div>
+
+<!-- JOURNAL -->
+<div class="page" id="pg-journal">
+  <div class="je-new" id="journal-form" style="display:none">
+    <div class="ptitle">new entry</div>
+    <input type="text" id="jn-title" placeholder="title…" style="margin-bottom:8px">
+    <div style="display:flex;gap:7px;margin-bottom:10px;align-items:center">
+      <input id="jn-mood" placeholder="tag this entry… e.g. breakthrough, grateful, tired" style="font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;flex:1;padding:7px 12px;border:1px solid var(--veil);border-radius:20px;background:rgba(255,255,255,.5);color:var(--ink);outline:none">
+      <button class="tbtn pri" onclick="saveJournalEntry()">save</button>
+      <button class="tbtn" onclick="closeJournalForm()">cancel</button>
+    </div>
+    <!-- RICH TEXT TOOLBAR -->
+    <div class="editor-toolbar" id="toolbar">
+      <button class="et-btn" title="Bold" onclick="fmt('bold')"><b>B</b></button>
+      <button class="et-btn" title="Italic" onclick="fmt('italic')"><i>I</i></button>
+      <button class="et-btn" title="Underline" onclick="fmt('underline')"><u>U</u></button>
+      <button class="et-btn" title="Strikethrough" onclick="fmt('strikeThrough')"><s>S</s></button>
+      <div class="et-sep"></div>
+      <button class="et-btn" title="Heading" onclick="fmt('formatBlock','h3')">H</button>
+      <button class="et-btn" title="Quote" onclick="fmt('formatBlock','blockquote')">"</button>
+      <div class="et-sep"></div>
+      <button class="et-btn" title="Bullet list" onclick="fmt('insertUnorderedList')">• —</button>
+      <button class="et-btn" title="Numbered list" onclick="fmt('insertOrderedList')">1.</button>
+      <button class="et-btn" title="Checklist" onclick="insertChecklist()">☐</button>
+      <div class="et-sep"></div>
+      <button class="et-btn" title="Highlight yellow" onclick="highlight('#fef08a')" style="font-size:11px">✦ hi</button>
+      <button class="et-btn" title="Highlight pink" onclick="highlight('#fecdd3')" style="font-size:11px">✦ hi</button>
+      <button class="et-btn" title="Highlight blue" onclick="highlight('#bae6fd')" style="font-size:11px">✦ hi</button>
+      <button class="et-btn" title="Remove highlight" onclick="fmt('removeFormat')" style="font-size:10px">✕</button>
+      <div class="et-sep"></div>
+      <button class="et-btn" title="Indent" onclick="fmt('indent')">→</button>
+      <button class="et-btn" title="Outdent" onclick="fmt('outdent')">←</button>
+    </div>
+    <div class="rich-editor" id="jn-body" contenteditable="true" placeholder="how did today go? write freely — use the toolbar to format lists, highlights, and more…"></div>
+  </div>
+  <div id="journal-list"></div>
+</div>
+
+<!-- GOALS -->
+<div class="page" id="pg-goals">
+  <div id="goals-list"></div>
+  <div style="margin-top:6px">
+    <div class="ptitle" style="margin-bottom:8px">add a new goal</div>
+    <div class="goal-form">
+      <input id="g-title" placeholder="e.g. write 500 words daily…" onkeydown="if(event.key==='Enter')addGoal()">
+      <select id="g-cat" style="font-style:normal;font-family:'DM Sans',sans-serif;font-size:12px">
+        <option value="work">Work</option>
+        <option value="phd">PhD</option>
+        <option value="RA">RA</option>
+        <option value="life">Life</option>
+        <option value="creativity">Creativity</option>
+      </select>
+      <button class="tbtn pri" onclick="addGoal()">add goal</button>
+    </div>
+  </div>
+</div>
+
+<!-- OPPORTUNITIES -->
+<div class="page" id="pg-opps">
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+    <button class="tbtn pri" onclick="openOppForm(0)" style="font-size:12px">+ add opportunity</button>
+    <div style="display:flex;gap:5px;margin-left:auto">
+      <button class="tbtn" id="ov-cards" onclick="setOppView('cards')" style="font-size:11px">cards</button>
+      <button class="tbtn" id="ov-board" onclick="setOppView('board')" style="font-size:11px">board</button>
+    </div>
+  </div>
+  <div class="filter-strip">
+    <span class="fs on" id="of-all" onclick="filterOpps('all')">all</span>
+    <span class="fs" id="of-scholarship" onclick="filterOpps('scholarship')">scholarships</span>
+    <span class="fs" id="of-conference" onclick="filterOpps('conference')">conferences</span>
+  </div>
+  <div id="opp-form-wrap" style="display:none;margin-bottom:16px">
+    <div class="card" style="border-left:3px solid var(--blush)">
+      <div class="ptitle" id="opp-form-title">new opportunity</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div><div class="ptitle" style="margin-bottom:4px">name</div><input id="opp-name" placeholder="e.g. NSF Graduate Fellowship" style="width:100%;padding:7px 10px;border:1px solid var(--veil);border-radius:20px;background:var(--mist);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;outline:none"></div>
+        <div><div class="ptitle" style="margin-bottom:4px">type</div><select id="opp-type" style="width:100%;padding:7px 10px;border:1px solid var(--veil);border-radius:20px;background:var(--mist);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:12px;outline:none"><option value="scholarship">Scholarship</option><option value="conference">Conference</option></select></div>
+        <div><div class="ptitle" style="margin-bottom:4px">deadline</div><input id="opp-deadline" type="date" style="width:100%;padding:7px 10px;border:1px solid var(--veil);border-radius:20px;background:var(--mist);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:12px;outline:none"></div>
+        <div><div class="ptitle" style="margin-bottom:4px">amount / fee</div><input id="opp-amount" placeholder="e.g. $5,000 award" style="width:100%;padding:7px 10px;border:1px solid var(--veil);border-radius:20px;background:var(--mist);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;outline:none"></div>
+        <div><div class="ptitle" style="margin-bottom:4px">organization / location</div><input id="opp-org" placeholder="e.g. NSF, Chicago IL" style="width:100%;padding:7px 10px;border:1px solid var(--veil);border-radius:20px;background:var(--mist);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;outline:none"></div>
+        <div><div class="ptitle" style="margin-bottom:4px">status</div><select id="opp-status" style="width:100%;padding:7px 10px;border:1px solid var(--veil);border-radius:20px;background:var(--mist);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:12px;outline:none"><option value="researching">Researching</option><option value="drafting">Drafting</option><option value="applied">Applied</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="registered">Registered</option></select></div>
+      </div>
+      <div style="margin-bottom:10px"><div class="ptitle" style="margin-bottom:4px">requirements and eligibility</div><textarea id="opp-reqs" placeholder="list requirements, eligibility criteria, what you need to submit..." style="width:100%;padding:10px;border:1px solid var(--veil);border-radius:8px;background:var(--mist);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;outline:none;resize:vertical;min-height:70px;line-height:1.6"></textarea></div>
+      <div style="margin-bottom:12px"><div class="ptitle" style="margin-bottom:4px">notes</div><textarea id="opp-notes" placeholder="links, contact info, any other notes..." style="width:100%;padding:10px;border:1px solid var(--veil);border-radius:8px;background:var(--mist);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;outline:none;resize:vertical;min-height:50px;line-height:1.6"></textarea></div>
+      <div style="display:flex;gap:8px"><button class="tbtn pri" onclick="saveOpp()" style="font-size:12px">save</button><button class="tbtn" onclick="closeOppForm()" style="font-size:12px">cancel</button></div>
+    </div>
+  </div>
+  <div id="opp-list"></div>
+</div>
+
+<!-- CULTURAL SHELF -->
+<div class="page" id="pg-culture">
+  <div class="cs-top">
+    <div class="cs-title">✦ cultural shelf</div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <span style="font-size:11px;color:#5a6e88;font-family:'DM Sans',sans-serif">city:</span>
+      <select id="city-select" onchange="switchCity(this.value)" style="padding:5px 10px;border:1px solid #3a4458;border-radius:20px;background:#262c38;color:#c8d4e0;font-family:'Caveat',cursive;font-size:14px;outline:none;cursor:pointer">
+        <option value="chicago">Chicago, IL</option>
+        <option value="nyc">New York, NY</option>
+        <option value="boston">Boston, MA</option>
+        <option value="denver">Denver / Boulder, CO</option>
+      </select>
+    </div>
+  </div>
+  <div class="cf-strip">
+    <span class="cf on" data-c="all" onclick="cfilt('all')">all</span>
+    <span class="cf" data-c="film" onclick="cfilt('film')">film</span>
+    <span class="cf" data-c="music" onclick="cfilt('music')">music</span>
+    <span class="cf" data-c="art" onclick="cfilt('art')">art exhibits</span>
+    <span class="cf" data-c="market" onclick="cfilt('market')">craft markets</span>
+    <span class="cf" data-c="festival" onclick="cfilt('festival')">festivals</span>
+  </div>
+  <div id="cs-body"><div class="empty-state">enter your zip code above and hit discover ✦</div></div>
+</div>
+
+</div></div></div></div>
+
+<script>
+// ── AUTH ──
+const HASH_KEY='jnl_pw_hash', SESSION_KEY='jnl_session';
+async function sha256(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
+async function tryLogin(){
+  const pw=document.getElementById('pw-input').value;
+  if(!pw){document.getElementById('pw-err').textContent='please enter a password';return;}
+  const hash=await sha256(pw);
+  const stored=localStorage.getItem(HASH_KEY);
+  if(!stored){localStorage.setItem(HASH_KEY,hash);sessionStorage.setItem(SESSION_KEY,'1');document.getElementById('pw-input').value='';bootApp();}
+  else if(stored===hash){sessionStorage.setItem(SESSION_KEY,'1');document.getElementById('pw-input').value='';bootApp();}
+  else{document.getElementById('pw-err').textContent="that's not quite right ✦";document.getElementById('pw-input').value='';document.getElementById('pw-input').focus();}
+}
+function lockApp(){sessionStorage.removeItem(SESSION_KEY);document.getElementById('app').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('pw-input').focus();}
+function bootApp(){document.getElementById('login-screen').style.display='none';document.getElementById('app').style.display='block';init();}
+
+// ── STORAGE ──
+function load(k,d){try{const v=localStorage.getItem('jnl_'+k);return v?JSON.parse(v):d;}catch{return d;}}
+function save(k,v){localStorage.setItem('jnl_'+k,JSON.stringify(v));}
+
+// ── STATE ──
+const TODAY=new Date(), TODAYSTR=TODAY.toISOString().split('T')[0];
+const DAYS=['su','mo','tu','we','th','fr','sa'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const WDAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+let selDate=TODAYSTR, tFilter='all', cFilter='all';
+let tasks,goals,events,journalEntries,savedCultureEvents,taskId,goalId,evId;
+
+const dotCols={work:'var(--work-b)',phd:'var(--phd-b)',RA:'var(--ra-b)',life:'var(--life-b)',creativity:'var(--creative-b)',personal:'var(--stone)',music:'var(--celadon)',film:'var(--stone)',market:'var(--blush)',festival:'#6888a8'};
+const catClass={work:'work',phd:'phd',RA:'RA',life:'life',creativity:'creativity',personal:'life'};
+
+function init(){
+  tasks=load('tasks',[]);goals=load('goals',[]);events=load('events',{});
+  journalEntries=load('journal',[]);savedCultureEvents=load('savedCulture',[]);
+  taskId=load('taskId',0);goalId=load('goalId',0);evId=load('evId',0);
+  loadOpps();
+  document.getElementById('jname').value=load('jname','')||'';
+  document.getElementById('motto-input').value=load('motto','')||'';
+  const d=TODAY;
+  document.getElementById('pg-date').textContent=`${WDAYS[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+
+  buildRail('dash-rail');buildRail('sched-rail');renderDash();renderCulture(currentCEvents);
+}
+function saveJName(){save('jname',document.getElementById('jname').value);}
+
+// ── TOAST ──
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+// ── DATE RAIL ──
+function buildRail(id){
+  const c=document.getElementById(id);if(!c)return;c.innerHTML='';
+  for(let i=-3;i<=10;i++){
+    const d=new Date(TODAY);d.setDate(d.getDate()+i);
+    const ds=d.toISOString().split('T')[0];
+    const isT=i===0,isSel=ds===selDate;
+    const dayEvs=events[ds]||[];
+    const cats=[...new Set(dayEvs.map(e=>e.cat))].slice(0,3);
+    // also check saved culture events
+    const cultEvs=savedCultureEvents.filter(e=>e.calDate===ds);
+    const allDots=[...cats.map(cat=>dotCols[cat]||'var(--ghost)'),...cultEvs.map(()=>'var(--celadon)')].slice(0,4);
+    const dots=allDots.map(col=>`<div class="dp-dot" style="background:${col}"></div>`).join('');
+    const el=document.createElement('div');
+    el.className='dp'+(isT?' tod':'')+(isSel?' sel':'');
+    el.innerHTML=`<div class="dw">${DAYS[d.getDay()]}</div><div class="dd">${d.getDate()}</div><div class="dp-dots">${dots}</div>`;
+    el.onclick=(()=>{const _ds=ds,_id=id;return()=>{selDate=_ds;buildRail('dash-rail');buildRail('sched-rail');if(document.getElementById('pg-dash').classList.contains('on'))renderDash();if(document.getElementById('pg-sched').classList.contains('on'))renderSched();};})();
+    c.appendChild(el);
+  }
+}
+
+// ── DASHBOARD ──
+function renderDash(){
+  const todayEvs=events[selDate]||[];
+  const openT=tasks.filter(t=>!t.done&&!t.lb);
+  const lbT=tasks.filter(t=>t.lb&&!t.done);
+  document.getElementById('d-ev').textContent=todayEvs.length;
+  document.getElementById('d-tk').textContent=openT.length;
+  document.getElementById('d-lb').textContent=lbT.length;
+  renderDashOpps();
+  const de=document.getElementById('dash-events');
+  if(!todayEvs.length){de.innerHTML=`<div class="empty-state">no events — add one in schedule</div>`;}
+  else{de.innerHTML=todayEvs.sort((a,b)=>a.start.localeCompare(b.start)).map(e=>`<div class="ev-row"><div class="ev-dot" style="background:${dotCols[e.cat]||'var(--ghost)'}"></div><div><div class="ev-ti">${e.title}</div><div class="ev-me">${e.start}–${e.end} &nbsp;<span class="pill p-${catClass[e.cat]||e.cat}">${e.cat}</span></div></div></div>`).join('');}
+  const dt=document.getElementById('dash-tasks');
+  let h='';
+  if(lbT.length){h+=`<div class="sep-txt">left behind</div>`;lbT.slice(0,2).forEach(t=>{h+=`<div class="task-row"><div class="chk" onclick="toggleT(${t.id})"></div><div style="flex:1"><div class="tk">${t.text}</div><div style="margin-top:2px"><span class="lb-badge">carried over</span></div></div></div>`;});h+=`<div style="height:4px"></div>`;}
+  const open=openT.slice(0,4);
+  if(open.length){h+=`<div class="sep-txt">today</div>`+open.map(t=>`<div class="task-row"><div class="chk" onclick="toggleT(${t.id})"></div><div class="tk" style="flex:1">${t.text}</div><span class="pill p-${catClass[t.cat]||t.cat}">${t.cat}</span></div>`).join('');}
+  const done=tasks.filter(t=>t.done);
+  if(done.length)h+=`<div style="font-size:10px;color:var(--ghost);margin-top:7px;font-style:italic;font-family:'Cormorant Garamond',serif">${done.length} done ✓</div>`;
+  if(!h)h=`<div class="empty-state">all clear ✦</div>`;
+  dt.innerHTML=h;
+}
+
+// ── SCHEDULE ──
+function renderSched(){
+  const d=new Date(selDate+'T12:00:00');
+  document.getElementById('sched-label').textContent=`${WDAYS[d.getDay()].toLowerCase()}, ${MONTHS[d.getMonth()].toLowerCase()} ${d.getDate()}`;
+  const dayEvs=(events[selDate]||[]).sort((a,b)=>a.start.localeCompare(b.start));
+  const el=document.getElementById('sched-blocks');
+  if(!dayEvs.length){el.innerHTML=`<div class="empty-state">no events yet — add one below</div>`;return;}
+  el.innerHTML=dayEvs.map(e=>`<div class="tb-row"><div class="tb-t">${e.start}</div><div class="tb-inner"><div class="tb-block bl-${e.cat}"><strong>${e.title}</strong><span>${e.start}–${e.end}</span></div></div><button class="del" style="margin-top:8px" onclick="delEvent('${selDate}','${e.id}')">×</button></div>`).join('');
+}
+function addEvent(){
+  const title=document.getElementById('ev-title').value.trim();if(!title)return;
+  if(!events[selDate])events[selDate]=[];
+  events[selDate].push({id:String(++evId),title,start:document.getElementById('ev-start').value,end:document.getElementById('ev-end').value,cat:document.getElementById('ev-cat').value});
+  save('events',events);save('evId',evId);
+  document.getElementById('ev-title').value='';
+  renderSched();buildRail('dash-rail');buildRail('sched-rail');
+  if(document.getElementById('pg-dash').classList.contains('on'))renderDash();
+  toast('event added ✦');
+}
+function delEvent(date,id){events[date]=(events[date]||[]).filter(e=>e.id!==id);save('events',events);renderSched();buildRail('dash-rail');buildRail('sched-rail');}
+
+// ── TASKS ──
+function renderTasks(){
+  const el=document.getElementById('task-list');if(!el)return;
+  let list=tFilter==='all'?tasks:tasks.filter(t=>t.cat===tFilter);
+  const lb=list.filter(t=>t.lb&&!t.done);
+  const open=list.filter(t=>!t.done&&!t.lb);
+  const done=list.filter(t=>t.done);
+  const row=(t,isLb)=>`<div class="task-row"><div class="chk ${t.done?'dn':''}" onclick="toggleT(${t.id})"></div><div style="flex:1"><div class="tk ${t.done?'dn':''}">${t.text}</div><div style="margin-top:3px;display:flex;gap:4px;align-items:center"><span class="pill p-${catClass[t.cat]||t.cat}">${t.cat}</span>${isLb?`<span class="lb-badge">left behind</span>`:''}</div></div><button class="del" onclick="delT(${t.id})">×</button></div>`;
+  let h='';
+  if(lb.length){h+=`<div class="sep-txt">left behind (${lb.length})</div>`+lb.map(t=>row(t,true)).join('')+'<div style="height:6px"></div>';}
+  if(open.length){h+=`<div class="sep-txt">today (${open.length})</div>`+open.map(t=>row(t,false)).join('');}
+  if(done.length){h+=`<div class="sep-txt" style="margin-top:10px">done (${done.length})</div>`+done.map(t=>row(t,false)).join('');}
+  if(!h)h=`<div class="empty-state">all clear ✦</div>`;
+  el.innerHTML=h;
+}
+function addTask(){
+  const txt=document.getElementById('new-task').value.trim();if(!txt)return;
+  tasks.unshift({id:++taskId,text:txt,cat:document.getElementById('task-cat').value,done:false,date:TODAYSTR,lb:false});
+  save('tasks',tasks);save('taskId',taskId);
+  document.getElementById('new-task').value='';renderTasks();renderDash();
+}
+function toggleT(id){const t=tasks.find(x=>x.id===id);if(t){t.done=!t.done;save('tasks',tasks);}renderTasks();renderDash();}
+function delT(id){tasks=tasks.filter(t=>t.id!==id);save('tasks',tasks);renderTasks();renderDash();}
+function filterT(f){tFilter=f;document.querySelectorAll('.fs').forEach(x=>x.classList.toggle('on',x.id==='tf-'+f));renderTasks();}
+
+// ── RICH TEXT EDITOR ──
+function fmt(cmd,val){document.getElementById('jn-body').focus();document.execCommand(cmd,false,val||null);}
+function highlight(color){document.getElementById('jn-body').focus();document.execCommand('hiliteColor',false,color);}
+function insertChecklist(){
+  document.getElementById('jn-body').focus();
+  document.execCommand('insertHTML',false,'<div>☐ &nbsp;</div>');
+}
+
+// ── JOURNAL ──
+function openJournalForm(){
+  document.getElementById('journal-form').style.display='block';
+  document.getElementById('jn-title').focus();
+}
+function closeJournalForm(){
+  document.getElementById('journal-form').style.display='none';
+  document.getElementById('jn-title').value='';
+  document.getElementById('jn-body').innerHTML='';
+}
+function saveJournalEntry(){
+  const body=document.getElementById('jn-body').innerHTML.trim();
+  if(!body||body==='<br>')return;
+  const title=document.getElementById('jn-title').value.trim()||'reflection';
+  const mood=document.getElementById('jn-mood').value;
+  const d=new Date();
+  journalEntries.unshift({id:Date.now(),title,body,mood,date:TODAYSTR,display:`${WDAYS[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`});
+  save('journal',journalEntries);closeJournalForm();renderJournal();toast('entry saved ✦');
+}
+function delJournal(id){journalEntries=journalEntries.filter(e=>e.id!==id);save('journal',journalEntries);renderJournal();}
+function renderJournal(){
+  const el=document.getElementById('journal-list');
+  if(!journalEntries.length){el.innerHTML=`<div class="empty-state" style="padding:60px 0">your journal is empty — write your first entry ✦</div>`;return;}
+  el.innerHTML=journalEntries.map(e=>`<div class="je"><div><span class="je-d">${e.display||e.date}</span><span class="je-mood">${e.mood}</span></div><div class="je-title">${e.title}</div><div class="je-body">${e.body}</div><div class="je-dec">✦</div><button class="del" style="position:absolute;top:14px;right:36px" onclick="delJournal(${e.id})">×</button></div>`).join('');
+}
+
+// ── GOALS ──
+function renderGoals(){
+  const el=document.getElementById('goals-list');if(!el)return;
+  const D=['M','T','W','T','F','S','S'];
+  if(!goals.length){el.innerHTML=`<div class="empty-state">no goals yet — add one below ✦</div>`;return;}
+  el.innerHTML=goals.map(g=>{
+    const done=g.days.filter(Boolean).length,pct=Math.round((done/7)*100);
+    const ds=D.map((d,i)=>`<div class="hab-d ${g.days[i]?'dn':''}" onclick="togGoal(${g.id},${i})">${d}</div>`).join('');
+    return `<div class="goal-card"><div class="gc-head"><div><span class="pill p-${catClass[g.cat]||g.cat}" style="margin-bottom:5px;display:inline-block">${g.cat}</span><div class="gc-title">${g.title}</div></div><div style="display:flex;align-items:center;gap:8px"><div class="gc-pct">${pct}%</div><button class="del" onclick="delGoal(${g.id})">×</button></div></div><div class="hab">${ds}</div><div class="pbar"><div class="pbf" style="width:${pct}%"></div></div></div>`;
+  }).join('');
+}
+function addGoal(){
+  const t=document.getElementById('g-title').value.trim();if(!t)return;
+  goals.push({id:++goalId,title:t,cat:document.getElementById('g-cat').value,days:[false,false,false,false,false,false,false]});
+  save('goals',goals);save('goalId',goalId);document.getElementById('g-title').value='';renderGoals();toast('goal added ✦');
+}
+function togGoal(id,i){const g=goals.find(x=>x.id===id);if(g){g.days[i]=!g.days[i];save('goals',goals);renderGoals();}}
+function delGoal(id){goals=goals.filter(g=>g.id!==id);save('goals',goals);renderGoals();}
+
+// ── CULTURAL SHELF ──
+// ── CITY EVENTS DATA ──
+const CITY_EVENTS={
+  chicago:[
+    {cat:"film",title:"Doc10 Film Festival",venue:"Davis Theater & Gene Siskel Film Center",date:"Apr 24 - May 3",desc:"Chicago's acclaimed all-documentary festival in its 10th anniversary year, featuring Sundance and Tribeca picks.",tags:["documentary"],notable:true},
+    {cat:"film",title:"CineYouth Film Festival",venue:"Various Chicago venues",date:"Apr 24-26",desc:"21st edition celebrating filmmakers 22 and younger from around the world.",tags:["youth","indie"],notable:false},
+    {cat:"film",title:"Millennium Park Summer Film Series",venue:"Jay Pritzker Pavilion",date:"Jun 30 - Aug 18, free",desc:"Free outdoor films under the stars at Millennium Park every Tuesday all summer.",tags:["free","outdoor"],notable:false},
+    {cat:"music",title:"International Jazz Day 2026",venue:"Various - Chicago is host city",date:"Late April",desc:"Chicago named the 15th annual International Jazz Day host. Herbie Hancock and Melissa Aldana confirmed.",tags:["jazz","host city"],notable:true},
+    {cat:"music",title:"Safronia - Lyric Opera",venue:"Lyric Opera House, 20 N Wacker Dr",date:"This week, 2 nights only",desc:"Avery r. young's Afro-surrealist Great Migration epic combining gospel, blues, poetry and soul.",tags:["world premiere","opera"],notable:true},
+    {cat:"music",title:"CSO: Tchaikovsky No. 5 and Bartok",venue:"Symphony Center, 220 S Michigan Ave",date:"This week",desc:"Karina Canellakis leads. Conrad Tao performs Bartok's romantic piano concerto.",tags:["CSO","classical"],notable:true},
+    {cat:"music",title:"Joe Hisaishi conducts the CSO",venue:"Symphony Center, 220 S Michigan Ave",date:"Coming soon",desc:"The Studio Ghibli composer leads the Chicago Symphony in his own works.",tags:["Ghibli","CSO"],notable:true},
+    {cat:"art",title:"Matisse's Jazz: Rhythms in Color",venue:"Art Institute of Chicago",date:"Mar 7 - Jun 1, ticketed",desc:"20 original cut-paper maquettes. Matisse bedridden in the 1940s, inventing a new art form.",tags:["ticketed","major"],notable:true},
+    {cat:"art",title:"Korean National Treasures: 2000 Years",venue:"Art Institute of Chicago",date:"Mar 7 - Jul 5",desc:"140 works including 22 official Korean National Treasures, a once-in-a-lifetime loan.",tags:["major"],notable:true},
+    {cat:"art",title:"Dancing the Revolution: Dancehall to Reggaeton",venue:"Museum of Contemporary Art Chicago",date:"Apr 14 - Sep 20",desc:"MCA's major new show exploring dancehall and reggaeton through paintings, sound sculpture and video.",tags:["MCA","new opening"],notable:true},
+    {cat:"art",title:"Firelei Baez",venue:"Museum of Contemporary Art Chicago",date:"Through May 31",desc:"Myth-laden paintings threading Caribbean history with lush layered abstraction.",tags:["MCA"],notable:false},
+    {cat:"art",title:"The Hand and The Eye",venue:"McCormick Mansion, Gold Coast",date:"Opening Apr 18",desc:"The world's largest magic venue transforms a historic Gold Coast mansion into an immersive experience.",tags:["new opening","immersive"],notable:true},
+    {cat:"art",title:"Ornament and Information",venue:"Chicago Cultural Center, free",date:"Apr 10 - Jul 19",desc:"Free downtown exhibition exploring intellectual exchange between Chicago and Vienna.",tags:["free"],notable:false},
+    {cat:"market",title:"One of a Kind Spring Show",venue:"The Merchandise Mart",date:"Apr 24-26",desc:"350+ artists and makers with original work across art, fashion, home goods and food.",tags:["major fair"],notable:true},
+    {cat:"market",title:"Chicago Artisan Market Ravenswood",venue:"Artifact Events, 4325 N Ravenswood",date:"Apr 18-19, 11am-5pm",desc:"Top Chicago and Midwest artisans in food, fashion, home goods, and art.",tags:["this weekend"],notable:false},
+    {cat:"market",title:"Maxwell Street Market",venue:"1330 S Halsted St",date:"Sundays, May through Oct",desc:"Chicago's century-old market returns with crafts, live music, and global street food.",tags:["free","weekly"],notable:false},
+    {cat:"festival",title:"Chicago Humanities Festival",venue:"Various venues citywide",date:"Apr 18 - May 17",desc:"Leading artists, authors, and visionaries. Talks and performances across the city.",tags:["multi-week"],notable:true},
+    {cat:"festival",title:"CIVL Fest",venue:"Independent venues citywide",date:"Apr 16-25",desc:"Citywide fest spotlighting Chicago's most beloved independent music venues.",tags:["indie"],notable:false}
+  ],
+  nyc:[
+    {cat:"film",title:"Tribeca Film Festival",venue:"Various NYC venues",date:"Jun 4-15",desc:"One of the world's most celebrated film festivals returns to downtown Manhattan.",tags:["major","indie"],notable:true},
+    {cat:"film",title:"NYC Fringe Festival",venue:"Various venues",date:"Apr-May",desc:"75 experimental musicals, one-acts, and solo shows from daring emerging artists.",tags:["indie","experimental"],notable:false},
+    {cat:"music",title:"The Last Five Years - Ben Platt and Rachel Zegler",venue:"Lincoln Center",date:"Apr 6-7",desc:"Concert staging of the beloved two-person musical starring Ben Platt and Rachel Zegler.",tags:["musical","limited"],notable:true},
+    {cat:"music",title:"Metropolitan Opera: El Ultimo Sueno de Frida y Diego",venue:"Metropolitan Opera House",date:"May 14 - Jun 5",desc:"World-premiere opera about Frida Kahlo and Diego Rivera alongside a MoMA exhibition.",tags:["opera","world premiere"],notable:true},
+    {cat:"music",title:"Broadway Sings for Earth Day",venue:"Times Square, free",date:"Apr 22",desc:"Tony-winning Broadway cast members perform free outdoors for Earth Day.",tags:["free","broadway"],notable:false},
+    {cat:"art",title:"Frida Kahlo and Diego Rivera at MoMA",venue:"MoMA, 11 W 53rd St",date:"Mar 21 - Sep 12",desc:"Five Kahlo paintings and over a dozen Riveras in a lavish installation at MoMA.",tags:["major","ticketed"],notable:true},
+    {cat:"art",title:"Whitney Biennial 2026",venue:"Whitney Museum of American Art",date:"Now through summer",desc:"The longest-running survey of contemporary American art, 56 artists examining present-day life.",tags:["biennial","major"],notable:true},
+    {cat:"art",title:"Raphael at The Met",venue:"The Metropolitan Museum of Art",date:"Now through summer",desc:"The first comprehensive Raphael exhibition ever held in the United States.",tags:["major","ticketed"],notable:true},
+    {cat:"art",title:"Frieze New York 2026",venue:"The Shed, Hudson Yards",date:"May 13-17",desc:"Frieze's 15th New York edition brings 70 international galleries to Hudson Yards.",tags:["art fair","major"],notable:true},
+    {cat:"art",title:"New Museum reopens with New Humans",venue:"New Museum, Lower East Side",date:"Reopened Mar 21",desc:"New Museum reopens after a two-year expansion with an inaugural show on what it means to be human.",tags:["reopening","major"],notable:true},
+    {cat:"market",title:"NADA New York",venue:"Various Chelsea venues",date:"May 13-17",desc:"120 galleries showcasing emerging voices in contemporary art.",tags:["art fair","emerging"],notable:false},
+    {cat:"festival",title:"Big Umbrella Festival",venue:"Lincoln Center",date:"Apr 10-26",desc:"Lincoln Center's festival for neurodiverse audiences. Most shows are pay-what-you-wish.",tags:["accessible","free"],notable:false},
+    {cat:"festival",title:"JAPAN Fes NYC",venue:"Multiple Manhattan neighborhoods",date:"Ongoing through spring",desc:"34 events bringing Japanese street food, crafts and cultural celebrations across the city.",tags:["cultural","free"],notable:false}
+  ],
+  boston:[
+    {cat:"film",title:"Independent Film Festival Boston",venue:"Coolidge Corner Theatre and venues",date:"Apr 29 - May 5",desc:"One of New England's premier indie film festivals showcasing bold international and American cinema.",tags:["indie","festival"],notable:true},
+    {cat:"film",title:"Coolidge Corner Theatre",venue:"Coolidge Corner Theatre, Brookline",date:"Ongoing",desc:"Boston's beloved independent cinema with a curated program of arthouse and foreign films.",tags:["arthouse"],notable:false},
+    {cat:"music",title:"Boston Marathon Music Program",venue:"Boylston Street and course",date:"Apr 20, free",desc:"Live bands line the entire 26.2-mile Marathon course creating a citywide concert experience.",tags:["free"],notable:true},
+    {cat:"music",title:"Boston Pops Spring Season",venue:"Symphony Hall, 301 Massachusetts Ave",date:"May through Jun",desc:"Keith Lockhart leads the beloved Boston Pops in their annual spring season.",tags:["classical"],notable:true},
+    {cat:"art",title:"ICA Boston Spring Exhibitions",venue:"Institute of Contemporary Art, Fort Point",date:"Ongoing",desc:"Boston's leading contemporary art museum with rotating exhibitions overlooking the harbour.",tags:["contemporary"],notable:true},
+    {cat:"art",title:"MFA Boston Spring Program",venue:"Museum of Fine Arts, 465 Huntington",date:"Ongoing",desc:"One of the world's great art museums spanning Ancient Egypt to contemporary works.",tags:["major museum"],notable:true},
+    {cat:"art",title:"SoWa First Fridays",venue:"SoWa Art District, South End",date:"First Friday monthly, free",desc:"Monthly gallery crawl through South End artist studios and galleries.",tags:["free","monthly"],notable:false},
+    {cat:"art",title:"Boston College Arts Festival",venue:"Boston College campus",date:"Apr 23-25",desc:"Annual three-day celebration with 16,000 attendees for dance, music, theater and visual arts.",tags:["free","festival"],notable:false},
+    {cat:"market",title:"SoWa Open Market",venue:"SoWa Power Station, South End",date:"Sundays May through Oct",desc:"Boston's beloved outdoor market combining local farmers, vintage vendors and artisans.",tags:["seasonal"],notable:false},
+    {cat:"market",title:"Boston Public Market",venue:"Faneuil Hall, Downtown",date:"Year-round",desc:"Indoor year-round market dedicated to New England farmers, fishers, and food artisans.",tags:["local"],notable:false},
+    {cat:"festival",title:"Boston Marathon Week",venue:"Citywide",date:"Apr 17-21",desc:"A full week of events, free concerts, expos and the world's oldest annual marathon.",tags:["citywide","free"],notable:true},
+    {cat:"festival",title:"Japan Festival Boston",venue:"Boston Common",date:"Apr 25-26",desc:"Annual celebration of Japanese culture with food, performances, and traditional crafts.",tags:["cultural","free"],notable:false},
+    {cat:"festival",title:"Wake Up the Earth Festival",venue:"Jamaica Plain",date:"May 2",desc:"48-year-old beloved Jamaica Plain tradition welcoming spring with 7,500 people.",tags:["free","community"],notable:false}
+  ],
+  denver:[
+    {cat:"film",title:"Boulder International Film Festival",venue:"Various Boulder venues",date:"Apr 9-12",desc:"Films and filmmakers from around the world gather in Boulder for this celebrated cinema festival.",tags:["festival","Boulder"],notable:true},
+    {cat:"film",title:"SeriesFest Season 12",venue:"Various Denver venues",date:"May 6-10",desc:"Award-winning festival dedicated to bold episodic storytelling from around the globe.",tags:["TV","indie"],notable:true},
+    {cat:"film",title:"Women+Film Festival",venue:"Denver venues",date:"Spring 2026",desc:"Denver's festival screening features, shorts and documentaries celebrating female filmmakers.",tags:["women","indie"],notable:false},
+    {cat:"music",title:"Denver Jazz Fest 2026",venue:"Various Denver venues",date:"Spring 2026",desc:"Bob James, Branford Marsalis and Fred Hersch Trio headline alongside tributes to Miles Davis.",tags:["jazz","festival"],notable:true},
+    {cat:"music",title:"Modern Jazz and Soul Fest",venue:"Roots Music Project, Boulder",date:"Apr 17-18",desc:"Annual Boulder festival showcasing the most compelling voices in contemporary jazz and soul.",tags:["jazz","Boulder"],notable:true},
+    {cat:"music",title:"Red Rocks Spring Season",venue:"Red Rocks Amphitheatre, Morrison",date:"Apr through May",desc:"The world's most iconic outdoor venue opens its season with Ice Cube, Kesha and Santana.",tags:["outdoor","iconic"],notable:true},
+    {cat:"music",title:"Colorado Symphony Spring Season",venue:"Boettcher Concert Hall, Denver",date:"Apr 14 onwards",desc:"The Colorado Symphony performs at Boettcher Concert Hall through the full spring season.",tags:["classical"],notable:false},
+    {cat:"art",title:"The Stars We Do Not See: Australian Indigenous Art",venue:"Denver Art Museum",date:"Apr 19 - Jul 26",desc:"New DAM exhibition exploring Australian Indigenous art and its connection to land and sky.",tags:["new opening","DAM"],notable:true},
+    {cat:"art",title:"Freedom Plane: Documents That Forged a Nation",venue:"History Colorado Center",date:"May 28 - Jun 14",desc:"Priceless original founding documents including Declaration of Independence engravings.",tags:["historic","rare"],notable:true},
+    {cat:"art",title:"Boulder Arts Week",venue:"Citywide, Boulder",date:"Apr 3-11",desc:"100 or more events across Boulder celebrating murals, installations, music and dance.",tags:["citywide","Boulder"],notable:true},
+    {cat:"art",title:"Denver Art District on Santa Fe",venue:"Santa Fe Drive, Denver",date:"Last Sunday monthly, free",desc:"Monthly free gallery crawl through Denver's vibrant art district with 40+ galleries.",tags:["free","monthly"],notable:false},
+    {cat:"market",title:"Denver Chalk Art Festival",venue:"Larimer Square, Denver",date:"Jun 6-7",desc:"200 or more artists transform Larimer Square streets into a spectacular chalk gallery.",tags:["free","street art"],notable:true},
+    {cat:"market",title:"Cherry Creek Arts Festival",venue:"Cherry Creek, Denver",date:"Jul 3-5",desc:"One of the nation's top juried outdoor fine arts festivals with 200 or more artists.",tags:["major fair","summer"],notable:true},
+    {cat:"festival",title:"Conference on World Affairs CU Boulder",venue:"University of Colorado, Boulder",date:"Apr 13-16, free",desc:"Free public panels with world leaders, journalists and experts on AI, climate, culture.",tags:["free","Boulder","ideas"],notable:true},
+    {cat:"festival",title:"Five Points Jazz Festival",venue:"Five Points neighborhood, Denver",date:"May 16, free",desc:"Free outdoor jazz festival celebrating Denver's historic Five Points neighborhood.",tags:["free","jazz","outdoor"],notable:true}
+  ]
+};
+
+let currentCEvents = CITY_EVENTS.chicago;
+let currentCity = 'chicago';
+
+function switchCity(city) {
+  currentCity = city;
+  currentCEvents = CITY_EVENTS[city] || [];
+  cFilter = 'all';
+  document.querySelectorAll('.cf').forEach(function(p){ p.classList.toggle('on', p.dataset.c === 'all'); });
+  renderCulture(currentCEvents);
+}
+
+function cfilt(f) {
+  cFilter = f;
+  document.querySelectorAll('.cf').forEach(function(p){ p.classList.toggle('on', p.dataset.c === f); });
+  renderCulture(currentCEvents);
+}
+
+function renderCulture(evs) {
+  var el = document.getElementById('cs-body');
+  if (!el) return;
+  if (!evs || !evs.length) { el.innerHTML = '<div class="empty-state">no events found</div>'; return; }
+  var cats = [
+    {c:'film', icon:'film', l:'on screen'},
+    {c:'music', icon:'music', l:'on stage'},
+    {c:'art', icon:'art', l:'on the walls'},
+    {c:'market', icon:'market', l:'makers & markets'},
+    {c:'festival', icon:'festival', l:'in the streets'}
+  ];
+  var show = cFilter === 'all' ? evs : evs.filter(function(e){ return e.cat === cFilter; });
+  var toShow = cFilter === 'all' ? cats : cats.filter(function(x){ return x.c === cFilter; });
+  var h = '';
+  toShow.forEach(function(cat) {
+    var items = show.filter(function(e){ return e.cat === cat.c; });
+    if (!items.length) return;
+    h += '<div class="sec-div"><div class="sdl"></div><div class="sdt">' + cat.l + '</div><div class="sdl"></div></div><div class="ev-grid">';
+    items.forEach(function(e) {
+      var tags = (e.tags || []).map(function(t){ return '<span class="eb eb-tag">' + t + '</span>'; }).join('');
+      var hot = e.notable ? '<span class="eb eb-hot">notable</span>' : '';
+      var saved = savedCultureEvents.some(function(s){ return s.title === e.title; });
+      var idx = evs.indexOf(e);
+      h += '<div class="ev-card" data-c="' + e.cat + '">';
+      h += '<div class="eb-row"><span class="eb eb-' + e.cat + '">' + e.cat + '</span>' + hot + tags + '</div>';
+      h += '<div class="ev-title">' + e.title + '</div>';
+      h += '<div class="ev-venue">' + e.venue + '</div>';
+      h += '<div class="ev-desc">' + e.desc + '</div>';
+      h += '<div class="ev-date"><span>' + e.date + '</span>';
+      h += '<button class="cal-btn' + (saved ? ' saved' : '') + '" onclick="toggleSave(' + idx + ')">' + (saved ? 'saved' : '+ calendar') + '</button>';
+      h += '</div></div>';
+    });
+    h += '</div>';
+  });
+  if (!h) h = '<div class="empty-state">nothing in this category</div>';
+  h += '<div class="cs-footer">' + show.length + ' events - April 2026</div>';
+  el.innerHTML = h;
+}
+
+function toggleSave(idx) {
+  var e = currentCEvents[idx];
+  if (!e) return;
+  var already = savedCultureEvents.find(function(s){ return s.title === e.title; });
+  if (already) {
+    savedCultureEvents = savedCultureEvents.filter(function(s){ return s.title !== e.title; });
+  } else {
+    savedCultureEvents.push({id: Date.now(), title: e.title, venue: e.venue, date: e.date, calDate: new Date().toISOString().split('T')[0], cat: e.cat});
+    toast('"' + e.title + '" added to calendar');
+  }
+  save('savedCulture', savedCultureEvents);
+  buildRail('dash-rail');
+  buildRail('sched-rail');
+  renderCulture(currentCEvents);
+}
+
+// ── OPPORTUNITIES ──
+var opps = [];
+var oppId = 0;
+var oppFilter = 'all';
+var oppView = 'cards';
+var editingOppId = null;
+
+function loadOpps() {
+  opps = load('opps', []);
+  oppId = load('oppId', 0);
+}
+
+function openOppForm(id) {
+  editingOppId = id || null;
+  document.getElementById('opp-form-wrap').style.display = 'block';
+  document.getElementById('opp-form-title').textContent = id ? 'edit opportunity' : 'new opportunity';
+  if (id) {
+    var o = opps.find(function(x){ return x.id === id; });
+    if (!o) return;
+    document.getElementById('opp-name').value = o.name || '';
+    document.getElementById('opp-type').value = o.type || 'scholarship';
+    document.getElementById('opp-deadline').value = o.deadline || '';
+    document.getElementById('opp-amount').value = o.amount || '';
+    document.getElementById('opp-org').value = o.org || '';
+    document.getElementById('opp-status').value = o.status || 'researching';
+    document.getElementById('opp-reqs').value = o.reqs || '';
+    document.getElementById('opp-notes').value = o.notes || '';
+  } else {
+    ['opp-name','opp-amount','opp-org','opp-deadline','opp-reqs','opp-notes'].forEach(function(i){ document.getElementById(i).value = ''; });
+    document.getElementById('opp-type').value = 'scholarship';
+    document.getElementById('opp-status').value = 'researching';
+  }
+  document.getElementById('opp-name').focus();
+}
+
+function closeOppForm() {
+  document.getElementById('opp-form-wrap').style.display = 'none';
+  editingOppId = null;
+}
+
+function saveOpp() {
+  var name = document.getElementById('opp-name').value.trim();
+  if (!name) return;
+  var data = {
+    id: editingOppId || ++oppId,
+    name: name,
+    type: document.getElementById('opp-type').value,
+    deadline: document.getElementById('opp-deadline').value,
+    amount: document.getElementById('opp-amount').value.trim(),
+    org: document.getElementById('opp-org').value.trim(),
+    status: document.getElementById('opp-status').value,
+    reqs: document.getElementById('opp-reqs').value.trim(),
+    notes: document.getElementById('opp-notes').value.trim()
+  };
+  if (editingOppId) {
+    var i = opps.findIndex(function(x){ return x.id === editingOppId; });
+    if (i > -1) opps[i] = data;
+  } else {
+    opps.unshift(data);
+  }
+  save('opps', opps);
+  save('oppId', oppId);
+  closeOppForm();
+  renderOpps();
+  renderDashOpps();
+  toast((editingOppId ? 'updated' : 'added') + ' opportunity');
+}
+
+function delOpp(id) {
+  opps = opps.filter(function(o){ return o.id !== id; });
+  save('opps', opps);
+  renderOpps();
+  renderDashOpps();
+}
+
+function updateOppStatus(id, status) {
+  var o = opps.find(function(x){ return x.id === id; });
+  if (o) { o.status = status; save('opps', opps); renderOpps(); }
+}
+
+function filterOpps(f) {
+  oppFilter = f;
+  document.querySelectorAll('[id^="of-"]').forEach(function(el){ el.classList.toggle('on', el.id === 'of-' + f); });
+  renderOpps();
+}
+
+function setOppView(v) {
+  oppView = v;
+  document.getElementById('ov-cards').classList.toggle('on', v === 'cards');
+  document.getElementById('ov-board').classList.toggle('on', v === 'board');
+  renderOpps();
+}
+
+function daysUntil(d) {
+  if (!d) return null;
+  return Math.ceil((new Date(d) - new Date()) / (1000 * 60 * 60 * 24));
+}
+
+function fmtDl(d) {
+  if (!d) return '';
+  var dt = new Date(d + 'T12:00:00');
+  return dt.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'});
+}
+
+var SL = {researching:'researching', drafting:'drafting', applied:'applied', accepted:'accepted', rejected:'rejected', registered:'registered'};
+var SO = ['researching','drafting','applied','accepted','rejected','registered'];
+
+function renderOpps() {
+  var el = document.getElementById('opp-list');
+  if (!el) return;
+  var list = oppFilter === 'all' ? opps : opps.filter(function(o){ return o.type === oppFilter; });
+  if (!list.length) {
+    el.innerHTML = '<div class="empty-state">no opportunities yet - add one above</div>';
+    return;
+  }
+  if (oppView === 'board') {
+    var h = '<div class="kanban">';
+    SO.forEach(function(s) {
+      var items = list.filter(function(o){ return o.status === s; });
+      h += '<div class="kol"><div class="kol-title">' + SL[s] + ' (' + items.length + ')</div>';
+      items.forEach(function(o) {
+        var d = daysUntil(o.deadline);
+        h += '<div class="kcard" onclick="openOppForm(' + o.id + ')">';
+        h += '<div style="margin-bottom:3px"><span class="opp-type-badge ' + o.type + '">' + o.type + '</span></div>';
+        h += '<div class="kcard-name">' + o.name + '</div>';
+        if (o.deadline) h += '<div class="kcard-date">' + (d !== null && d <= 7 ? '! ' : '') + fmtDl(o.deadline) + '</div>';
+        h += '</div>';
+      });
+      h += '</div>';
+    });
+    h += '</div>';
+    el.innerHTML = h;
+  } else {
+    var sorted = list.slice().sort(function(a, b) {
+      if (!a.deadline && !b.deadline) return 0;
+      if (!a.deadline) return 1;
+      if (!b.deadline) return -1;
+      return new Date(a.deadline) - new Date(b.deadline);
+    });
+    var html = '';
+    sorted.forEach(function(o) {
+      var d = daysUntil(o.deadline);
+      var urgent = d !== null && d <= 14 && d >= 0;
+      var statusOpts = SO.map(function(s) {
+        return '<option value="' + s + '"' + (o.status === s ? ' selected' : '') + '>' + SL[s] + '</option>';
+      }).join('');
+      var card = '<div class="opp-card ' + o.type + '">';
+      card += '<div><span class="opp-type-badge ' + o.type + '">' + o.type + '</span>';
+      card += '<span class="opp-status-pill s-' + o.status + '">' + SL[o.status] + '</span>';
+      if (urgent) card += '<span class="opp-urgent">! ' + (d === 0 ? 'today' : d + ' days') + '</span>';
+      card += '</div>';
+      card += '<div class="opp-name">' + o.name + '</div>';
+      if (o.org || o.amount) card += '<div class="opp-meta">' + [o.org, o.amount].filter(Boolean).join(' - ') + '</div>';
+      if (o.deadline) card += '<div class="opp-deadline' + (urgent ? ' urgent' : '') + '">deadline: ' + fmtDl(o.deadline) + '</div>';
+      if (o.reqs) card += '<div class="opp-reqs">' + o.reqs.split('\n').join('<br>') + '</div>';
+      if (o.notes) card += '<div class="opp-notes">' + o.notes + '</div>';
+      card += '<div class="opp-actions">';
+      card += '<select onchange="updateOppStatus(' + o.id + ',this.value)" class="opp-sel">' + statusOpts + '</select>';
+      card += '<button class="opp-act-btn" onclick="openOppForm(' + o.id + ')">edit</button>';
+      card += '<button class="opp-act-btn opp-del" onclick="delOpp(' + o.id + ')">delete</button>';
+      card += '</div></div>';
+      html += card;
+    });
+    el.innerHTML = html;
+  }
+}
+
+function renderDashOpps() {
+  var el = document.getElementById('dash-opps');
+  if (!el) return;
+  var upcoming = opps
+    .filter(function(o){ return o.deadline && ['researching','drafting','applied'].indexOf(o.status) > -1; })
+    .sort(function(a, b){ return new Date(a.deadline) - new Date(b.deadline); })
+    .slice(0, 5);
+  if (!upcoming.length) {
+    el.innerHTML = '<div style="text-align:center;padding:16px 0;color:var(--ghost);font-style:italic;font-family:Cormorant Garamond,serif;font-size:13px">no upcoming deadlines</div>';
+    return;
+  }
+  var h = '';
+  upcoming.forEach(function(o) {
+    var d = daysUntil(o.deadline);
+    var dl = d === 0 ? 'today!' : d === 1 ? 'tomorrow' : d < 0 ? 'overdue' : d + 'd';
+    var dotColor = o.type === 'scholarship' ? 'var(--blush)' : 'var(--celadon)';
+    h += '<div class="deadline-row">';
+    h += '<div class="dl-dot" style="background:' + dotColor + '"></div>';
+    h += '<div style="flex:1"><div class="dl-name">' + o.name + '</div>';
+    h += '<div class="dl-sub">' + fmtDl(o.deadline) + ' - ' + o.type + '</div></div>';
+    h += '<div class="dl-days' + (d <= 7 && d >= 0 ? ' urgent' : '') + '">' + dl + '</div>';
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+
+function saveMotto() {
+  save('motto', document.getElementById('motto-input').value);
+}
+
+
+
+// ── NAVIGATION ──
+const pages=['dash','sched','tasks','journal','goals','opps','culture'];
+const titles={dash:'today',sched:'schedule',tasks:'tasks',journal:'journal',goals:'goals',opps:'opportunities',culture:'cultural shelf'};
+const btnLbl={dash:'+ add event',sched:'+ add event',tasks:'+ add task',journal:'+ new entry',goals:'+ add goal',opps:'+ add opportunity',culture:'refresh'};
+function go(p){
+  pages.forEach(x=>{document.getElementById('pg-'+x).classList.toggle('on',x===p);document.getElementById('n-'+x).classList.toggle('on',x===p);});
+  document.getElementById('pg-title').textContent=titles[p];
+  document.getElementById('tb1').textContent=btnLbl[p];
+  document.getElementById('tb2').style.display=p==='journal'?'':'none';
+  buildRail('dash-rail');buildRail('sched-rail');
+  if(p==='tasks')renderTasks();
+  if(p==='goals')renderGoals();
+  if(p==='opps'){renderOpps();setOppView(oppView);}
+  if(p==='culture')renderCulture(currentCEvents);
+  if(p==='journal')renderJournal();
+  if(p==='sched')renderSched();
+  if(p==='dash')renderDash();
+}
+function tb1Act(){
+  const p=document.querySelector('.page.on').id.replace('pg-','');
+  if(p==='tasks')document.getElementById('new-task').focus();
+  else if(p==='journal')openJournalForm();
+  else if(p==='goals')document.getElementById('g-title').focus();
+  else if(p==='sched')document.getElementById('ev-title').focus();
+  else if(p==='culture'){}
+  else if(p==='opps')openOppForm(0);
+}
+
+if(sessionStorage.getItem(SESSION_KEY)){bootApp();}
+else{document.getElementById('pw-input').focus();}
+</script>
+</body>
+</html>
