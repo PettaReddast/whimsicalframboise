@@ -348,7 +348,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--fog);col
 
 <div class="main">
 <div class="topbar">
-  <div><div class="tb-title" id="pg-title">today</div><div class="tb-date" id="pg-date"></div></div>
+  <div><div class="tb-title" id="pg-title">today</div><div style="display:flex;align-items:center;gap:8px"><div class="tb-date" id="pg-date"></div><div id="sync-dot" style="width:6px;height:6px;border-radius:50%;background:var(--ghost);transition:background .5s" title="cloud sync"></div></div></div>
   <div style="display:flex;gap:7px">
     <button class="tbtn" id="tb2" style="display:none" onclick="openJournalForm()">+ entry</button>
     <button class="tbtn pri" id="tb1" onclick="tb1Act()">+ add event</button>
@@ -554,11 +554,68 @@ async function tryLogin(){
   else{document.getElementById('pw-err').textContent="that's not quite right ✦";document.getElementById('pw-input').value='';document.getElementById('pw-input').focus();}
 }
 function lockApp(){sessionStorage.removeItem(SESSION_KEY);document.getElementById('app').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('pw-input').focus();}
-function bootApp(){document.getElementById('login-screen').style.display='none';document.getElementById('app').style.display='block';init();}
+function bootApp(){document.getElementById('login-screen').style.display='none';document.getElementById('app').style.display='block';init().catch(function(){initUI();});}
 
 // ── STORAGE ──
-function load(k,d){try{const v=localStorage.getItem('jnl_'+k);return v?JSON.parse(v):d;}catch{return d;}}
-function save(k,v){localStorage.setItem('jnl_'+k,JSON.stringify(v));}
+// ── STORAGE: localStorage cache + Supabase cloud sync ──
+var _cache = {};
+
+function load(k, d) {
+  if (_cache[k] !== undefined) return _cache[k];
+  try { var v = localStorage.getItem('jnl_' + k); return v ? JSON.parse(v) : d; } catch(e) { return d; }
+}
+
+function save(k, v) {
+  _cache[k] = v;
+  localStorage.setItem('jnl_' + k, JSON.stringify(v));
+  dbSet(k, v);
+}
+
+async function dbGet(k) {
+  try {
+    var r = await fetch('/.netlify/functions/db', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'get', table: dbTable(k), id: k})
+    });
+    var d = await r.json();
+    return d.data !== undefined ? d.data : null;
+  } catch(e) { return null; }
+}
+
+async function dbSet(k, v) {
+  var dot = document.getElementById('sync-dot');
+  if (dot) dot.style.background = 'var(--gold)';
+  try {
+    await fetch('/.netlify/functions/db', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'set', table: dbTable(k), id: k, data: v})
+    });
+    if (dot) { dot.style.background = 'var(--celadon)'; setTimeout(function(){ dot.style.background='var(--ghost)'; }, 1500); }
+  } catch(e) {
+    if (dot) dot.style.background = 'var(--blush)';
+  }
+}
+
+function dbTable(k) {
+  if (['tasks','taskId'].indexOf(k) > -1) return 'tasks';
+  if (k === 'journal') return 'journal';
+  if (['goals','goalId'].indexOf(k) > -1) return 'goals';
+  if (['opps','oppId'].indexOf(k) > -1) return 'opportunities';
+  return 'settings';
+}
+
+async function loadFromCloud() {
+  var keys = ['tasks','taskId','journal','goals','goalId','opps','oppId','events','evId','savedCulture','jname','motto'];
+  var results = await Promise.all(keys.map(function(k){ return dbGet(k); }));
+  keys.forEach(function(k, i) {
+    if (results[i] !== null && results[i] !== undefined) {
+      _cache[k] = results[i];
+      localStorage.setItem('jnl_' + k, JSON.stringify(results[i]));
+    }
+  });
+}
 
 // ── STATE ──
 const TODAY=new Date(), TODAYSTR=TODAY.toISOString().split('T')[0];
@@ -566,22 +623,40 @@ const DAYS=['su','mo','tu','we','th','fr','sa'];
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const WDAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 let selDate=TODAYSTR, tFilter='all', cFilter='all';
-let tasks,goals,events,journalEntries,savedCultureEvents,taskId,goalId,evId;
+let tasks=[],goals=[],events={},journalEntries=[],savedCultureEvents=[],taskId=0,goalId=0,evId=0;
 
 const dotCols={work:'var(--work-b)',phd:'var(--phd-b)',RA:'var(--ra-b)',life:'var(--life-b)',creativity:'var(--creative-b)',personal:'var(--stone)',music:'var(--celadon)',film:'var(--stone)',market:'var(--blush)',festival:'#6888a8'};
 const catClass={work:'work',phd:'phd',RA:'RA',life:'life',creativity:'creativity',personal:'life'};
 
-function init(){
-  tasks=load('tasks',[]);goals=load('goals',[]);events=load('events',{});
-  journalEntries=load('journal',[]);savedCultureEvents=load('savedCulture',[]);
-  taskId=load('taskId',0);goalId=load('goalId',0);evId=load('evId',0);
-  loadOpps();
-  document.getElementById('jname').value=load('jname','')||'';
-  document.getElementById('motto-input').value=load('motto','')||'';
-  const d=TODAY;
-  document.getElementById('pg-date').textContent=`${WDAYS[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+function initUI() {
+  tasks = load('tasks', []);
+  goals = load('goals', []);
+  events = load('events', {});
+  journalEntries = load('journal', []);
+  savedCultureEvents = load('savedCulture', []);
+  taskId = load('taskId', 0);
+  goalId = load('goalId', 0);
+  evId = load('evId', 0);
+  var jn = document.getElementById('jname');
+  if (jn) jn.value = load('jname', '') || '';
+  var mi = document.getElementById('motto-input');
+  if (mi) mi.value = load('motto', '') || '';
+  var qn = document.getElementById('quick-note');
+  if (qn) qn.value = load('note', '') || '';
+  var d = TODAY;
+  var dateEl = document.getElementById('pg-date');
+  if (dateEl) dateEl.textContent = WDAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  buildRail('dash-rail');
+  buildRail('sched-rail');
+  renderDash();
+  renderCulture(currentCEvents);
+}
 
-  buildRail('dash-rail');buildRail('sched-rail');renderDash();renderCulture(currentCEvents);
+async function init() {
+  var dateEl = document.getElementById('pg-date');
+  if (dateEl) dateEl.textContent = 'syncing...';
+  try { await loadFromCloud(); } catch(e) {}
+  initUI();
 }
 function saveJName(){save('jname',document.getElementById('jname').value);}
 
@@ -595,7 +670,7 @@ function buildRail(id){
     const d=new Date(TODAY);d.setDate(d.getDate()+i);
     const ds=d.toISOString().split('T')[0];
     const isT=i===0,isSel=ds===selDate;
-    const dayEvs=events[ds]||[];
+    const dayEvs=(events||{})[ds]||[];
     const cats=[...new Set(dayEvs.map(e=>e.cat))].slice(0,3);
     // also check saved culture events
     const cultEvs=savedCultureEvents.filter(e=>e.calDate===ds);
@@ -611,7 +686,7 @@ function buildRail(id){
 
 // ── DASHBOARD ──
 function renderDash(){
-  const todayEvs=events[selDate]||[];
+  const todayEvs=(events||{})[selDate]||[];
   const openT=tasks.filter(t=>!t.done&&!t.lb);
   const lbT=tasks.filter(t=>t.lb&&!t.done);
   document.getElementById('d-ev').textContent=todayEvs.length;
@@ -636,14 +711,14 @@ function renderDash(){
 function renderSched(){
   const d=new Date(selDate+'T12:00:00');
   document.getElementById('sched-label').textContent=`${WDAYS[d.getDay()].toLowerCase()}, ${MONTHS[d.getMonth()].toLowerCase()} ${d.getDate()}`;
-  const dayEvs=(events[selDate]||[]).sort((a,b)=>a.start.localeCompare(b.start));
+  const dayEvs=((events||{})[selDate]||[]).sort((a,b)=>a.start.localeCompare(b.start));
   const el=document.getElementById('sched-blocks');
   if(!dayEvs.length){el.innerHTML=`<div class="empty-state">no events yet — add one below</div>`;return;}
   el.innerHTML=dayEvs.map(e=>`<div class="tb-row"><div class="tb-t">${e.start}</div><div class="tb-inner"><div class="tb-block bl-${e.cat}"><strong>${e.title}</strong><span>${e.start}–${e.end}</span></div></div><button class="del" style="margin-top:8px" onclick="delEvent('${selDate}','${e.id}')">×</button></div>`).join('');
 }
 function addEvent(){
   const title=document.getElementById('ev-title').value.trim();if(!title)return;
-  if(!events[selDate])events[selDate]=[];
+  if(!events)events={};if(!events[selDate])events[selDate]=[];
   events[selDate].push({id:String(++evId),title,start:document.getElementById('ev-start').value,end:document.getElementById('ev-end').value,cat:document.getElementById('ev-cat').value});
   save('events',events);save('evId',evId);
   document.getElementById('ev-title').value='';
